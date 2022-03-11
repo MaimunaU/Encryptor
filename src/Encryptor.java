@@ -181,7 +181,8 @@ public class Encryptor
         String decryptedBlock = "";
         for (int row = 0; row < temp2D.length; row++)
         {
-            for (int col = 0; col < temp2D[0].length; col++) {
+            for (int col = 0; col < temp2D[0].length; col++)
+            {
                 String element = temp2D[row][col];
                 decryptedBlock += element;
             }
