@@ -34,13 +34,15 @@ public class Encryptor
     {
         int row = 0;
         int col = 0;
-        while (row < letterBlock.length && col < letterBlock[0].length)
+        int count = 0;
+        while ((row < numRows && col < numCols) && count < str.length())
         {
-            for (int k = 0; k < str.length() && (row < letterBlock.length && col < letterBlock[0].length); k++)
+            for (int k = 0; k < str.length() && (row < numRows && col < numCols); k++)
             {
                 String character = str.substring(k, k + 1);
                 letterBlock[row][col] = character;
-                if (col == letterBlock[0].length - 1)
+                count++;
+                if (col == numCols - 1)
                 {
                     col = 0;
                     row++;
@@ -49,21 +51,20 @@ public class Encryptor
                 {
                     col++;
                 }
-
             }
         }
 
-        int lastRow = letterBlock.length - 1;
-        int lastCol = letterBlock[0].length - 1;
+        int lastRow = numRows - 1;
+        int lastCol = numCols - 1;
         String lastLetter = str.substring(str.length() - 1);
-        if (str.length() <= letterBlock.length * letterBlock[0].length)
+        if (str.length() <= numRows * numCols)
         {
-            while (!letterBlock[lastRow][lastCol].equals(lastLetter))
+            while (letterBlock[lastRow][lastCol] == null || !letterBlock[lastRow][lastCol].equals(lastLetter))
             {
                 letterBlock[lastRow][lastCol] = "A";
                 if (lastCol == 0)
                 {
-                    lastCol = letterBlock[0].length - 1;
+                    lastCol = numCols - 1;
                     lastRow--;
                 }
                 else
@@ -72,12 +73,10 @@ public class Encryptor
                 }
                 if (lastRow == 0)
                 {
-                    lastRow = letterBlock.length - 1;
+                    lastRow = numRows - 1;
                 }
             }
         }
-
-
     }
 
     /** Extracts encrypted string from letterBlock in column-major order.
@@ -88,7 +87,15 @@ public class Encryptor
      */
     public String encryptBlock()
     {
-        return "";
+        String encrypted = "";
+        for (int c = 0; c < numCols; c++)
+        {
+            for (int r = 0; r < numRows; r++)
+            {
+                encrypted += letterBlock[r][c];
+            }
+        }
+        return encrypted;
     }
 
     /** Encrypts a message.
@@ -99,7 +106,19 @@ public class Encryptor
      */
     public String encryptMessage(String message)
     {
-        return "";
+        String encrypted = "";
+        int size = numRows * numCols;
+        while (message.length() > 0)
+        {
+            if (size > message.length())
+            {
+                size = message.length();
+            }
+            fillBlock(message);
+            encrypted += encryptBlock();
+            message = message.substring(size);
+        }
+        return encrypted;
     }
 
     /**  Decrypts an encrypted message. All filler 'A's that may have been
@@ -126,6 +145,47 @@ public class Encryptor
      */
     public String decryptMessage(String encryptedMessage)
     {
-        return "";
+        String decrypted = "";
+        int size = numRows * numCols;
+
+        while (encryptedMessage.length() > 0)
+        {
+            String chunkToDecrypt = encryptedMessage.substring(0, size);
+            decrypted += decryptBlock(chunkToDecrypt);
+            encryptedMessage = encryptedMessage.substring(size);
+        }
+
+        String lastChar = decrypted.substring(decrypted.length() - 1);
+
+        while (lastChar.equals("A"))
+        {
+            decrypted = decrypted.substring(0, decrypted.length() - 1);
+            lastChar = decrypted.substring(decrypted.length() - 1);
+        }
+        return decrypted;
+    }
+
+    public String decryptBlock(String blockStr)
+    {
+        String[][] temp2D = new String[numRows][numCols];
+        int pos = 0;
+        for (int col = 0; col < temp2D[0].length; col++)
+        {
+            for (int row = 0; row < temp2D.length; row++)
+            {
+                temp2D[row][col] = blockStr.substring(pos, pos + 1);
+                pos++;
+            }
+        }
+
+        String decryptedBlock = "";
+        for (int row = 0; row < temp2D.length; row++)
+        {
+            for (int col = 0; col < temp2D[0].length; col++) {
+                String element = temp2D[row][col];
+                decryptedBlock += element;
+            }
+        }
+        return decryptedBlock;
     }
 }
