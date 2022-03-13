@@ -35,5 +35,9 @@ public class Main {
 
         decryptedMsg = encryptor3.decryptMessage("Dtco rndy’eptie sst shmagAAeAAAAAAAA");
         System.out.println(decryptedMsg);
+
+        Encryptor encryptor7 = new Encryptor(3, 3);
+        decryptedMsg = encryptor3.decryptMessage("Trahere e  t2lt6eeritsnh  e gsElhni lggauena, ve5ol ws,n2 d1a  csaoonnntsAA.AAAAA");
+        System.out.println(decryptedMsg);
     }
 }
