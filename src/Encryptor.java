@@ -32,48 +32,20 @@ public class Encryptor
      */
     public void fillBlock(String str)
     {
-        int row = 0;
-        int col = 0;
-        int count = 0;
-        while ((row < numRows && col < numCols) && count < str.length())
+        int k = 0;
+        for (int row = 0; row < numRows; row++)
         {
-            for (int k = 0; k < str.length() && (row < numRows && col < numCols); k++)
+            for (int col = 0; col < numCols; col++)
             {
-                String character = str.substring(k, k + 1);
-                letterBlock[row][col] = character;
-                count++;
-                if (col == numCols - 1)
+                if (k < str.length())
                 {
-                    col = 0;
-                    row++;
+                    String character = str.substring(k, k + 1);
+                    letterBlock[row][col] = character;
+                    k++;
                 }
                 else
                 {
-                    col++;
-                }
-            }
-        }
-
-        int lastRow = numRows - 1;
-        int lastCol = numCols - 1;
-        String lastLetter = str.substring(str.length() - 1);
-        if (str.length() <= numRows * numCols)
-        {
-            while (letterBlock[lastRow][lastCol] == null || !letterBlock[lastRow][lastCol].equals(lastLetter))
-            {
-                letterBlock[lastRow][lastCol] = "A";
-                if (lastCol == 0)
-                {
-                    lastCol = numCols - 1;
-                    lastRow--;
-                }
-                else
-                {
-                    lastCol--;
-                }
-                if (lastRow == 0)
-                {
-                    lastRow = numRows - 1;
+                    letterBlock[row][col] = "A";
                 }
             }
         }
